@@ -1,10 +1,10 @@
 #!/usr/bin/python
 #
-# This is the listener for the egress buster - works both on posix and windows
+# Egress Buster Listener - Merged Version
+# Written by: Dave Kennedy (ReL1K) | Updated by: Taylor Christian Newsome (SleepTheGod)
 #
-# Egress Buster Listener - Written by: Dave Kennedy (ReL1K) (@HackingDave) Updated By Taylor Christian Newsome Github @SleepTheGod
-#
-# Listener can only be run on Linux due to iptables support.
+# This script works on both POSIX and Windows, with enhancements for SSL support and system monitoring.
+# The listener starts on a specified port range and interacts with connected clients, while also monitoring system resources.
 #
 
 import threading
@@ -81,12 +81,19 @@ try:
     if not validate_port_range(lowport, highport):
         sys.exit(1)
 except IndexError:
-    logging.error("Usage: python egress_rev_shell_listener.py <lowport-highport>")
+    logging.error("""
+        TrustedSec, LLC
+        https://www.trustedsec.com
+
+        Egress Buster Reverse Shell v0.1 - Find open ports inside a network and then spawn a reverse shell.
+
+        Usage: python egress_listener.py <lowport-highport>
+        Example: python egress_listener.py 1-1000
+    """)
     sys.exit(1)
 
 # Base class handler for socket server
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
-
     def handle(self):
         self.data = self.request.recv(1024).strip()
         logging.info(f"{self.client_address[0]} connected on port: {self.server.server_address[1]}")
@@ -133,4 +140,3 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logging.info("Server shutdown initiated.")
         sys.exit(0)
-
